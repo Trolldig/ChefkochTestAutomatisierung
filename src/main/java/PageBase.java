@@ -1,12 +1,11 @@
-
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.NoSuchElementException;
 
 public class PageBase {
 
@@ -34,10 +33,6 @@ public class PageBase {
         element.click();
     }
 
-    public void clickMobile(MobileElement element) {
-        waitForVisibility(element);
-        element.click();
-    }
 
     public void sendText(MobileElement element, String text) {
         waitForVisibility(element);
@@ -47,5 +42,14 @@ public class PageBase {
     public String getAttribute(MobileElement element, String attribute) {
         waitForVisibility(element);
         return element.getAttribute(attribute);
+    }
+
+    public Boolean findElementByID(String id){
+        try {
+            driver.findElementById(id);
+            return true;
+        } catch (Exception e){
+            return false;
+        }
     }
 }

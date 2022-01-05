@@ -1,9 +1,6 @@
-import com.google.common.collect.ImmutableMap;
-
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -38,7 +35,6 @@ public class BaseClass {
             URL url = new URL("http://localhost:4723/wd/hub");
 
             driver = new AndroidDriver(url,caps);
-            //System.out.println(driver.getConnection());
         }catch(Exception exp){
             System.out.println("Grund: " + exp.getCause());
             System.out.println("Fehlermeldung: " + exp.getMessage());
@@ -48,14 +44,15 @@ public class BaseClass {
 
     @Test
     void sampleTest() throws InterruptedException {
-        //driver.findElementById("de.heute.mobile:id/onBoardingClickAreaView").click();
-        //Thread.sleep(10000);
         System.out.println("sampleTest ist fertig. (Funktionslos)");
     }
 
     @AfterTest
     void tearDown(){
         if (null != driver) {
+            if (driver.isKeyboardShown()){
+                driver.hideKeyboard();
+            }
             driver.quit();
         }
     }
