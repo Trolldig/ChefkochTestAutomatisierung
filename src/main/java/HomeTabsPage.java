@@ -14,12 +14,20 @@ public class HomeTabsPage extends PageBase {
     MobileElement consentAcceptBtn;
 
     //Hamburgermenü
-    @AndroidFindBy(accessibility = "Navigate Up")
+    @AndroidFindBy(accessibility = "Navigate up")
     MobileElement hamburgerMenuBtn;
 
     //Suche-Button
     @AndroidFindBy(accessibility = "Suche")
     MobileElement searchBtn;
+
+    //Startseite-Button im Hamburgermenü
+    @AndroidFindBy(id = "de.pixelhouse:id/nav_home")
+    MobileElement navHomeBtn;
+
+    //Startseite-Button im Hamburgermenü
+    @AndroidFindBy(id = "de.pixelhouse:id/nav_search")
+    MobileElement navSearchBtn;
 
     public void clickConsentAcceptBtn(){
         click(consentAcceptBtn);
@@ -33,5 +41,8 @@ public class HomeTabsPage extends PageBase {
         click(searchBtn);
     }
 
+    public void clickNavSearchBtn(){
+        click(navSearchBtn);
+    }
 
 }

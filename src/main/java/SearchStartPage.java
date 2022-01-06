@@ -6,27 +6,19 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
-public class SearchPage extends PageBase{
+public class SearchStartPage extends PageBase{
 
-    public SearchPage(AndroidDriver<MobileElement> androidDriver) {
+    public SearchStartPage(AndroidDriver<MobileElement> androidDriver) {
         super(androidDriver);
     }
 
     //Hamburgermenü
     @AndroidFindBy(accessibility = "Navigate up")
-    MobileElement navigateBackBtn;
-
-    //Back-Button der Suchleiste
-    @FindBy(id = "de.pixelhouse:id/left_action")
-    MobileElement searchBackBtn;
+    MobileElement hamburgerMenuBtn;
 
     //Suchleiste
     @FindBy(id = "de.pixelhouse:id/search_bar_text")
     MobileElement searchTextField;
-
-    //Kebap Menü
-    @FindBy(id = "de.pixelhouse:id/search_bar_overflow_menu")
-    MobileElement kebapMenu;
 
     //Löschen-Button der Suchleiste
     @FindBy(id = "de.pixelhouse:id/clear_btn")
@@ -40,32 +32,12 @@ public class SearchPage extends PageBase{
     @AndroidFindBy(id = "de.pixelhouse:id/suggestions_list")
     MobileElement suggestionContainer;
 
-    //Filter-Btn
-    @FindBy(id = "de.pixelhouse:id/search_filter_text_tv")
-    MobileElement filterBtn;
-
-    //4Sterne & mehr Filter-Btn
-    @FindBy(id = "de.pixelhouse:id/mr_four_stars")
-    MobileElement filterFourStarsBtn;
-
-    //Rezeptliste
-    @FindBy(id = "de.pixelhouse:id/list")
-    MobileElement recipeListContainer;
-
-    public void clickNavigateBackBtn(){
-        click(navigateBackBtn);
-    }
-
-    public void clickSearchBackBtn(){
-        click(searchBackBtn);
+    public void clickHamburgerMenuBtn(){
+        click(hamburgerMenuBtn);
     }
 
     public void clickSearchTextField(){
         click(searchTextField);
-    }
-
-    public void clickKebapMenu(){
-        click(kebapMenu);
     }
 
     public void clickClearBtn(){
@@ -80,19 +52,11 @@ public class SearchPage extends PageBase{
         click(searchBtn);
     }
 
-    public void clickFilterBtn(){
-        click(filterBtn);
-    }
-
-    public void clickFilterFourStarsBtn(){
-        click(filterFourStarsBtn);
-    }
-
     /**
      *  Checkt, ob Suchvorschläge vorhanden sind
      * @return true wenn Suchvorschläge vohanden sind, false sonst
      */
-    private Boolean suggestionContainerFound(){
+    public Boolean suggestionContainerFound(){
         Boolean suggestionContainerFound = findElementByID("de.pixelhouse:id/suggestions_list");
         return suggestionContainerFound;
     }
@@ -110,8 +74,7 @@ public class SearchPage extends PageBase{
             // Geht alle Suchvorschläge durch und vergleicht sie mit dem Suchbegriff
             // Suchbegriffe werden immer Kleingeschrieben
             for (MobileElement textElement : suggestions){
-                String suggestion = textElement.getText();
-                if (suggestion.equals(searchedText.toLowerCase())){
+                if (textElement.getText().equals(searchedText.toLowerCase())){
                     textFound = true;
                     System.out.println("Liste enthält: " + searchedText);
                 }
@@ -155,55 +118,6 @@ public class SearchPage extends PageBase{
             click(suggestionList.get(rand.nextInt(suggestionList.size())));
         } else {
             System.out.println("Keine Vorschläge vorhanden");
-        }
-    }
-
-    private Boolean recipeListFound(){
-        Boolean recipeListFound = findElementByID("de.pixelhouse:id/list");
-        return recipeListFound;
-    }
-
-    public Boolean recipeTitleContains(String titleFragment){
-        Boolean textFound = false;
-        if(recipeListFound()){
-            // Packt alle TextViewsElemente der Vorschläge in eine Liste
-            List<MobileElement> recipes = recipeListContainer.findElementsByClassName("android.widget.TextView");
-            // Geht alle Rezepte durch und vergleicht sie mit dem Suchbegriff
-            // Suchbegriffe werden immer Kleingeschrieben
-            for (MobileElement textElement : recipes){
-                String recipeText = textElement.getText().toLowerCase();
-                if (recipeText.contains(titleFragment.toLowerCase())){
-                    textFound = true;
-                    System.out.println("Liste enthält: " + titleFragment);
-                }
-            }
-            return textFound;
-        } else {
-            return textFound;
-        }
-    }
-
-    /**
-     *  Durchsucht die Titel der angezeigten Rezepte nach einem Textfragment
-     *  Groß- und Kleinschreibung sind irrelevant. Alle Texte werden in Kleinbuchstaben verglichen.
-     * @param titleFragment Textstück, dass in den Rezeptiteln gesucht werden sol
-     */
-    public void clickRecipe(String titleFragment){
-        if(recipeTitleContains(titleFragment)){
-            Boolean recipeFound = false;
-            List<MobileElement> recipeList = recipeListContainer.findElementsByClassName("android.widget.TextView");
-            ListIterator<MobileElement> recipeListIterator = recipeList.listIterator();
-            //durchsucht die Titel der Rezepte nach dem Fragment
-            while(!recipeFound && recipeListIterator.hasNext()){
-                //speichert den nächsten Titel in Kleinbuchstaben in einem String
-                String recipeTitle = recipeListIterator.next().getText().toLowerCase();
-                //vergleicht den nächsten Titel mit dem gesuchten Fragment
-                if (recipeTitle.contains(titleFragment.toLowerCase())){
-                    recipeFound = true;
-                    recipeListIterator.previous();
-                    click(recipeListIterator.next());
-                }
-            }
         }
     }
 }

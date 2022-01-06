@@ -19,8 +19,15 @@ public class PageBase {
     }
 
     public void waitForVisibility(MobileElement element){
-        WebDriverWait wait = new WebDriverWait(driver, WAIT);
-        wait.until(ExpectedConditions.visibilityOf(element));
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, WAIT);
+            wait.until(ExpectedConditions.visibilityOf(element));
+        } catch (Exception exp){
+            System.out.println("Grund: " + exp.getCause());
+            System.out.println("Fehlermeldung: " + exp.getMessage());
+            exp.printStackTrace();
+        }
+
     }
 
     public void clear(MobileElement element) {
@@ -48,7 +55,7 @@ public class PageBase {
         try {
             driver.findElementById(id);
             return true;
-        } catch (Exception e){
+        } catch (Exception exp){
             return false;
         }
     }
