@@ -14,23 +14,23 @@ public class SearchStartPage extends PageBase{
 
     //Hamburgermenü
     @AndroidFindBy(accessibility = "Navigate up")
-    MobileElement hamburgerMenuBtn;
+    private MobileElement hamburgerMenuBtn;
 
     //Suchleiste
     @FindBy(id = "de.pixelhouse:id/search_bar_text")
-    MobileElement searchTextField;
+    private MobileElement searchTextField;
 
     //Löschen-Button der Suchleiste
     @FindBy(id = "de.pixelhouse:id/clear_btn")
-    MobileElement searchClearBtn;
+    private MobileElement searchClearBtn;
 
     //Suche-Button
     @AndroidFindBy(accessibility = "Suche")
-    MobileElement searchBtn;
+    private MobileElement searchBtn;
 
     //Container mit Liste der Suchvorschläge
     @AndroidFindBy(id = "de.pixelhouse:id/suggestions_list")
-    MobileElement suggestionContainer;
+    private MobileElement suggestionContainer;
 
     public void clickHamburgerMenuBtn(){
         click(hamburgerMenuBtn);

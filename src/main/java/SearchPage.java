@@ -14,43 +14,47 @@ public class SearchPage extends PageBase{
 
     //Hamburgermenü
     @AndroidFindBy(accessibility = "Navigate up")
-    MobileElement navigateBackBtn;
+    private MobileElement navigateBackBtn;
 
     //Back-Button der Suchleiste
     @FindBy(id = "de.pixelhouse:id/left_action")
-    MobileElement searchBackBtn;
+    private MobileElement searchBackBtn;
 
     //Suchleiste
     @FindBy(id = "de.pixelhouse:id/search_bar_text")
-    MobileElement searchTextField;
+    private MobileElement searchTextField;
 
     //Kebap Menü
     @FindBy(id = "de.pixelhouse:id/search_bar_overflow_menu")
-    MobileElement kebapMenu;
+    private MobileElement kebapMenu;
 
     //Löschen-Button der Suchleiste
     @FindBy(id = "de.pixelhouse:id/clear_btn")
-    MobileElement searchClearBtn;
+    private MobileElement searchClearBtn;
 
     //Suche-Button
     @AndroidFindBy(accessibility = "Suche")
-    MobileElement searchBtn;
+    private MobileElement searchBtn;
 
     //Container mit Liste der Suchvorschläge
     @AndroidFindBy(id = "de.pixelhouse:id/suggestions_list")
-    MobileElement suggestionContainer;
+    private MobileElement suggestionContainer;
 
     //Filter-Btn
     @FindBy(id = "de.pixelhouse:id/search_filter_text_tv")
-    MobileElement filterBtn;
+    private MobileElement filterBtn;
 
     //4Sterne & mehr Filter-Btn
     @FindBy(id = "de.pixelhouse:id/mr_four_stars")
-    MobileElement filterFourStarsBtn;
+    private MobileElement filterFourStarsBtn;
+
+    //enthält Filter zurücksetzen-[index 0] und apply-button [2] + anzahl der Suchergebnisse [1]
+    @FindBy(id = "de.pixelhouse:id/search_filter_action_panel")
+    private MobileElement filterFooter;
 
     //Rezeptliste
     @FindBy(id = "de.pixelhouse:id/list")
-    MobileElement recipeListContainer;
+    private MobileElement recipeListContainer;
 
     public void clickNavigateBackBtn(){
         click(navigateBackBtn);
@@ -88,12 +92,18 @@ public class SearchPage extends PageBase{
         click(filterFourStarsBtn);
     }
 
+    public void clickFilterApplyBtn(){
+        List<MobileElement> filterFooterBtns = filterFooter.findElementsByClassName("android.widget.ImageView");
+        MobileElement applyBtn = filterFooterBtns.get(1);
+        click(applyBtn);
+    }
+
     /**
      *  Checkt, ob Suchvorschläge vorhanden sind
      * @return true wenn Suchvorschläge vohanden sind, false sonst
      */
-    private Boolean suggestionContainerFound(){
-        Boolean suggestionContainerFound = findElementByID("de.pixelhouse:id/suggestions_list");
+    private boolean suggestionContainerFound(){
+        boolean suggestionContainerFound = findElementByID("de.pixelhouse:id/suggestions_list");
         return suggestionContainerFound;
     }
 
@@ -104,7 +114,7 @@ public class SearchPage extends PageBase{
      */
     public boolean suggestionListContainsWord(String searchedText){
         if (suggestionContainerFound()) {
-            Boolean textFound = false;
+            boolean textFound = false;
             // Packt alle TextViewsElemente der Vorschläge in eine Liste
             List<MobileElement> suggestions = suggestionContainer.findElementsByClassName("android.widget.TextView");
             // Geht alle Suchvorschläge durch und vergleicht sie mit dem Suchbegriff
@@ -129,10 +139,10 @@ public class SearchPage extends PageBase{
      */
     public void clickSuggestion(String searchedText){
         if (suggestionListContainsWord(searchedText)){
-            Boolean suggestionFound = false;
+            boolean suggestionFound = false;
             List<MobileElement> suggestionList = suggestionContainer.findElementsByClassName("android.widget.TextView");
             ListIterator<MobileElement> suggestionListIterator = suggestionList.listIterator();
-            while(!suggestionFound){
+            while(!suggestionFound && suggestionListIterator.hasNext()){
                 if (suggestionListIterator.next().getText().equals(searchedText.toLowerCase())){
                     suggestionFound = true;
                     suggestionListIterator.previous();
@@ -147,23 +157,23 @@ public class SearchPage extends PageBase{
      */
     public void clickRandomSuggestion(){
         if (suggestionContainerFound()) {
-            Boolean textFound = false;
+            boolean textFound = false;
             // Packt alle TextViewsElemente der Vorschläge in eine Liste
             List<MobileElement> suggestionList = suggestionContainer.findElementsByClassName("android.widget.TextView");
             Random rand = new Random();
-            // Wält einen zufälligen Begriff aus
+            // Wählt einen zufälligen Begriff aus
             click(suggestionList.get(rand.nextInt(suggestionList.size())));
         } else {
             System.out.println("Keine Vorschläge vorhanden");
         }
     }
 
-    private Boolean recipeListFound(){
+    private boolean recipeListFound(){
         Boolean recipeListFound = findElementByID("de.pixelhouse:id/list");
         return recipeListFound;
     }
 
-    public Boolean recipeTitleContains(String titleFragment){
+    public boolean recipeTitlesContain(String titleFragment){
         Boolean textFound = false;
         if(recipeListFound()){
             // Packt alle TextViewsElemente der Vorschläge in eine Liste
@@ -189,8 +199,8 @@ public class SearchPage extends PageBase{
      * @param titleFragment Textstück, dass in den Rezeptiteln gesucht werden sol
      */
     public void clickRecipe(String titleFragment){
-        if(recipeTitleContains(titleFragment)){
-            Boolean recipeFound = false;
+        if(recipeTitlesContain(titleFragment)){
+            boolean recipeFound = false;
             List<MobileElement> recipeList = recipeListContainer.findElementsByClassName("android.widget.TextView");
             ListIterator<MobileElement> recipeListIterator = recipeList.listIterator();
             //durchsucht die Titel der Rezepte nach dem Fragment
@@ -204,6 +214,21 @@ public class SearchPage extends PageBase{
                     click(recipeListIterator.next());
                 }
             }
+        }
+    }
+
+    /**
+     *  Tappt auf ein zufälliges Rezept
+     */
+    public void clickRandomRecipe(){
+        if (recipeListFound()) {
+            // Packt alle sichtbaren Rezepte in eine Liste
+            List<MobileElement> recipeList = recipeListContainer.findElementsByClassName("android.widget.TextView");
+            Random rand = new Random();
+            // Wählt ein zufälliges Rezept aus
+            click(recipeList.get(rand.nextInt(recipeList.size())));
+        } else {
+            System.out.println("Keine Rezepte vorhanden");
         }
     }
 }
