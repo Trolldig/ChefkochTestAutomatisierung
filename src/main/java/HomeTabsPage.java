@@ -3,6 +3,9 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import org.openqa.selenium.support.FindBy;
 
+import java.util.List;
+import java.util.ListIterator;
+
 public class HomeTabsPage extends PageBase {
 
     public HomeTabsPage(AndroidDriver<MobileElement> androidDriver) {
@@ -11,7 +14,7 @@ public class HomeTabsPage extends PageBase {
 
     //Der "Zustimmen"-Button im Consent-Overlay beim Start der App
     @FindBy(xpath = "//div[@id=\"notice\"]/div[4]/div[1]/button")
-    MobileElement consentAcceptBtn;
+    MobileElement consentBtn;
 
     //Hamburgermenü
     @AndroidFindBy(accessibility = "Navigate up")
@@ -30,7 +33,7 @@ public class HomeTabsPage extends PageBase {
     MobileElement navSearchBtn;
 
     public void clickConsentAcceptBtn(){
-        click(consentAcceptBtn);
+        click(consentBtn);
     }
 
     public void clickHamburgerMenuBtn(){

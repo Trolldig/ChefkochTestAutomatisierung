@@ -169,12 +169,12 @@ public class SearchPage extends PageBase{
     }
 
     private boolean recipeListFound(){
-        Boolean recipeListFound = findElementByID("de.pixelhouse:id/list");
+        boolean recipeListFound = findElementByID("de.pixelhouse:id/list");
         return recipeListFound;
     }
 
     public boolean recipeTitlesContain(String titleFragment){
-        Boolean textFound = false;
+        boolean textFound = false;
         if(recipeListFound()){
             // Packt alle TextViewsElemente der Vorschläge in eine Liste
             List<MobileElement> recipes = recipeListContainer.findElementsByClassName("android.widget.TextView");

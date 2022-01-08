@@ -3,10 +3,16 @@ import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import utilits.JsonReader;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Set;
 
@@ -114,43 +120,59 @@ public class HappyPathClass extends BaseClass{
         return searchPage.recipeTitlesContain(recipeName);
     }
 
-    @Test
-    void acceptConsent() throws InterruptedException{
-        changeContext();
-        homeTabsPage = new HomeTabsPage(driver);
-        homeTabsPage.clickConsentAcceptBtn();
+    /**
+     * Navigiert durch back-button zurück, bis der der Home-Screen zu sehen ist
+     * @throws InterruptedException
+     */
+    public void setBackToHomeActivity() throws InterruptedException {
+        String homeActivity = ".chefkoch.app.screen.hometabs.HomeTabsActivity";
+        setBackToActivity(homeActivity);
+    }
+
+    @DataProvider(name = "search data")
+    public Object [][] passData() throws IOException, ParseException {
+        return JsonReader.getJSONData(System.getProperty("user.dir")+"/data/SearchData.json", "Search Data", 4);
     }
 
     @Test
-    void theCakeIsALie() throws InterruptedException {
+    void acceptConsent() throws InterruptedException{
+        setup();
+        changeContext();
+        homeTabsPage = new HomeTabsPage(driver);
+        homeTabsPage.clickConsentAcceptBtn();
+        changeContext();
+    }
 
+    @Test(dataProvider = "search data")
+    void theCakeIsALie(String searchTerm1, String searchterm2, String searchSuggestion2, String recipeTitle) throws InterruptedException {
         //driver.openNotifications();
         //driver.navigate().back();
         //Thread.sleep(10000);
-        changeContext();
+        //changeContext();
         homeTabsPage = new HomeTabsPage(driver);
         homeTabsPage.clickSearchBtn();
         System.out.println(driver.currentActivity());
         searchStartPage = new SearchStartPage(driver);
         searchStartPage.clickSearchTextField();
-        searchStartPage.sendTextSearchBar("Apfelkuchen");
+        searchStartPage.sendTextSearchBar(searchTerm1);
         searchStartPage.clickClearBtn();
-        searchStartPage.sendTextSearchBar("Schokola");
-        searchStartPage.clickSuggestion("Schokoladenkuchen");
+        searchStartPage.sendTextSearchBar(searchterm2);
+        searchStartPage.clickSuggestion(searchSuggestion2);
         System.out.println(driver.currentActivity());
         searchPage = new SearchPage(driver);
         searchPage.clickFilterBtn();
         searchPage.clickFilterFourStarsBtn();
         searchPage.clickFilterApplyBtn();
-        searchPage.recipeTitlesContain("tarte");
+        searchPage.recipeTitlesContain(recipeTitle);
         while(!recipeFound && counter < 5){
-            if(swipeAndCheckForRecipe("tarte")){
+            if(swipeAndCheckForRecipe(recipeTitle)){
                 recipeFound = true;
             }
             counter++;
         }
         if(recipeFound){
-            searchPage.clickRecipe("tarte");
+            searchPage.clickRecipe(recipeTitle);
+            recipeFound = false;
         } else {
             searchPage.clickRandomRecipe();
         }
@@ -161,6 +183,7 @@ public class HappyPathClass extends BaseClass{
 
         //driver.pressKey(new KeyEvent(AndroidKey.ENTER));
         Thread.sleep(5000);
+        setBackToHomeActivity();
     }
 
 

@@ -1,5 +1,7 @@
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterTest;
@@ -13,7 +15,7 @@ public class BaseClass {
 
     public AndroidDriver<MobileElement> driver;
 
-    @BeforeTest
+    //@BeforeTest
     void setup(){
 
         try {
@@ -42,7 +44,22 @@ public class BaseClass {
         }
     }
 
-    @Test
+    /**
+     * Navigiert mit Back-Button zurück, bis eine bestimmte Activity geöffnet ist
+     * @param goalActivity
+     * @throws InterruptedException
+     */
+    public void setBackToActivity(String goalActivity) throws InterruptedException {
+        String currentActivity = driver.currentActivity();
+        if(!currentActivity.equals(goalActivity)){
+            while(!currentActivity.equals(goalActivity)){
+                driver.pressKey(new KeyEvent(AndroidKey.BACK));
+                currentActivity = driver.currentActivity();
+            }
+        }
+    }
+
+    //@Test
     void sampleTest() throws InterruptedException {
         System.out.println("sampleTest ist fertig. (Funktionslos)");
     }

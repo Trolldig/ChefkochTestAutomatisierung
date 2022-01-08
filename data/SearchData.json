@@ -1,0 +1,16 @@
+{
+  "Search Data": [
+    {
+      "SearchTerm1" : "Apfelkuchen",
+      "SearchTerm2" : "Schokola",
+      "SearchTerm3" : "Schokoladenkuchen",
+      "SearchTerm4" : "Tarte"
+    },
+    {
+      "SearchTerm1" : "Schnitzel",
+      "SearchTerm2" : "Wie",
+      "SearchTerm3" : "Wienerschnitzel",
+      "SearchTerm4" : "Petersilien"
+    }
+  ]
+}
