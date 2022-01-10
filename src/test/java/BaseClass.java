@@ -6,7 +6,6 @@ import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
 
 import java.net.URL;
 
@@ -55,6 +54,7 @@ public class BaseClass {
             while(!currentActivity.equals(goalActivity)){
                 driver.pressKey(new KeyEvent(AndroidKey.BACK));
                 currentActivity = driver.currentActivity();
+                System.out.println(currentActivity);
             }
         }
     }

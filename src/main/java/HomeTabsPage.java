@@ -1,6 +1,7 @@
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
@@ -32,6 +33,14 @@ public class HomeTabsPage extends PageBase {
     @AndroidFindBy(id = "de.pixelhouse:id/nav_search")
     MobileElement navSearchBtn;
 
+    //Werbebanner, kann zum Swipen der Tabs benutzt werden
+    @FindBy(id = "de.pixelhouse:id/banner_top")
+    MobileElement banner;
+
+    //Slider auf der Startseite
+    @FindBy (id = "de.pixelhouse:id/main_slider_compose_view")
+    MobileElement aktuellesSlider;
+
     public void clickConsentAcceptBtn(){
         click(consentBtn);
     }
@@ -46,6 +55,23 @@ public class HomeTabsPage extends PageBase {
 
     public void clickNavSearchBtn(){
         click(navSearchBtn);
+    }
+
+    /**
+     *
+     * @return center coordinates of the element
+     */
+    public int[] getBannerPosition(){
+        Point a = banner.getLocation();
+        int [] coordinates = new int [2];
+        int leftX = banner.getLocation().getX();
+        int rightX = leftX + banner.getSize().getWidth();
+        coordinates[0] = (rightX + leftX) / 2;
+        int upperY = banner.getLocation().getY();
+        int lowerY = upperY + banner.getSize().getHeight();
+        coordinates[1] = (upperY + lowerY) / 2;
+
+        return coordinates;
     }
 
 }

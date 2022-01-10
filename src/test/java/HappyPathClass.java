@@ -6,8 +6,7 @@ import io.appium.java_client.touch.offset.PointOption;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import utilits.JsonReader;
@@ -50,7 +49,7 @@ public class HappyPathClass extends BaseClass{
      *
      * @param dir the direction of swipe
      **/
-    public void swipeScreenWith(String dir) {
+    public void swipeScreenWith(int xStart, int yStart, String dir, boolean useCoordinates) {
         System.out.println("swipeScreen(): dir: '" + dir + "'"); // always log your actions
 
         // Animation default time:
@@ -62,27 +61,38 @@ public class HappyPathClass extends BaseClass{
         final int PRESS_TIME = 200; // ms
 
         int edgeBorder = 10; // better avoid edges
+        int xCoordinate;
+        int yCoordinate;
         Point pointStart, pointEnd;
         PointOption pointOptionStart, pointOptionEnd;
 
         // init screen variables
         Dimension dims = driver.manage().window().getSize();
 
-        // init start point = center of screen
-        pointStart = new Point(dims.width / 2, dims.height / 2);
+        if(useCoordinates){
+            xCoordinate = xStart;
+            yCoordinate = yStart;
+            pointStart = new Point(xCoordinate, yCoordinate);
+        } else {
+            xCoordinate = dims.width;
+            yCoordinate = dims.height;
+            pointStart = new Point(xCoordinate / 2, yCoordinate / 2);
+        }
+        // init start point = given coordinates or center of screen if irrelevant
+        //pointStart = new Point(xCoordinate / 2, yCoordinate / 2);
 
         switch (dir) {
             case "DOWN": // center of footer
-                pointEnd = new Point(dims.width / 2, dims.height - (dims.height / 3) - edgeBorder);
+                pointEnd = new Point(xCoordinate / 2, yCoordinate - (yCoordinate / 3) - edgeBorder);
                 break;
             case "UP": // center of header
-                pointEnd = new Point(dims.width / 2, dims.width / 3 + edgeBorder);
+                pointEnd = new Point(xCoordinate / 2, xCoordinate / 3 + edgeBorder);
                 break;
             case "LEFT": // center of left side
-                pointEnd = new Point(edgeBorder, dims.height / 2);
+                pointEnd = new Point(edgeBorder, yCoordinate);
                 break;
             case "RIGHT": // center of right side
-                pointEnd = new Point(dims.width - edgeBorder, dims.height / 2);
+                pointEnd = new Point(xCoordinate - edgeBorder, yCoordinate);
                 break;
             default:
                 throw new IllegalArgumentException("swipeScreen(): dir: '" + dir.toString() + "' NOT supported");
@@ -116,7 +126,7 @@ public class HappyPathClass extends BaseClass{
 
     public boolean swipeAndCheckForRecipe(String recipeName){
         searchPage.recipeTitlesContain(recipeName);
-        swipeScreenWith("UP");
+        swipeScreenWith(0,0,"UP",false);
         return searchPage.recipeTitlesContain(recipeName);
     }
 
@@ -134,7 +144,7 @@ public class HappyPathClass extends BaseClass{
         return JsonReader.getJSONData(System.getProperty("user.dir")+"/data/SearchData.json", "Search Data", 4);
     }
 
-    @Test
+    @Test (priority = 1)
     void acceptConsent() throws InterruptedException{
         setup();
         changeContext();
@@ -143,7 +153,7 @@ public class HappyPathClass extends BaseClass{
         changeContext();
     }
 
-    @Test(dataProvider = "search data")
+    @Test(dataProvider = "search data", priority = 2)
     void theCakeIsALie(String searchTerm1, String searchterm2, String searchSuggestion2, String recipeTitle) throws InterruptedException {
         //driver.openNotifications();
         //driver.navigate().back();
@@ -182,9 +192,17 @@ public class HappyPathClass extends BaseClass{
         //searchPage.clickRandomSuggestion();
 
         //driver.pressKey(new KeyEvent(AndroidKey.ENTER));
-        Thread.sleep(5000);
+        //Thread.sleep(5000);
         setBackToHomeActivity();
     }
 
+    @Test (priority = 3)
+    void swipeHomeSlider() throws InterruptedException{
+        int [] coordinates = homeTabsPage.getBannerPosition();
+        Thread.sleep(1000);
+        swipeScreenWith(coordinates[0], coordinates[1],"LEFT",true);
+
+        Thread.sleep(5000);
+    }
 
 }
