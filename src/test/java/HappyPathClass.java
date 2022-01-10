@@ -147,6 +147,9 @@ public class HappyPathClass extends BaseClass{
     @Test (priority = 1)
     void acceptConsent() throws InterruptedException{
         setup();
+        while(driver.getContextHandles().size() <= 1){
+            Thread.sleep(1000);
+        }
         changeContext();
         homeTabsPage = new HomeTabsPage(driver);
         homeTabsPage.clickConsentAcceptBtn();
