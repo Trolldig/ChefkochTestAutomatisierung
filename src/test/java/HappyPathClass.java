@@ -202,9 +202,9 @@ public class HappyPathClass extends BaseClass{
     @Test (priority = 3)
     void swipeHomeSlider() throws InterruptedException{
         int [] coordinates = homeTabsPage.getBannerPosition();
-        Thread.sleep(1000);
         swipeScreenWith(coordinates[0], coordinates[1],"LEFT",true);
-
+        Thread.sleep(10000);
+        swipeScreenWith(coordinates[0], coordinates[1],"RIGHT",true);
         Thread.sleep(5000);
     }
 
