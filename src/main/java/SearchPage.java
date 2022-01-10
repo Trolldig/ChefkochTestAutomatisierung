@@ -158,7 +158,7 @@ public class SearchPage extends PageBase{
     public void clickRandomSuggestion(){
         if (suggestionContainerFound()) {
             boolean textFound = false;
-            // Packt alle TextViewsElemente der Vorschläge in eine Liste
+            // Packt alle Textelemente der Suchvorschläge in eine Liste
             List<MobileElement> suggestionList = suggestionContainer.findElementsByClassName("android.widget.TextView");
             Random rand = new Random();
             // Wählt einen zufälligen Begriff aus
@@ -173,13 +173,19 @@ public class SearchPage extends PageBase{
         return recipeListFound;
     }
 
+    /**
+     *  Durchsucht die Titel der angezeigten Rezepte nach einem Textfragment
+     *  Groß- und Kleinschreibung sind irrelevant. Alle Texte werden in Kleinbuchstaben verglichen.
+     * @param titleFragment Wort das in einem Rezeptitel gesucht wird
+     * @return True, falls titleFragement in den angezeigten Rezepten zu finden ist. False sonst
+     */
     public boolean recipeTitlesContain(String titleFragment){
         boolean textFound = false;
         if(recipeListFound()){
-            // Packt alle TextViewsElemente der Vorschläge in eine Liste
+            // Packt alle Textelemente der Suchvorschläge in eine Liste
             List<MobileElement> recipes = recipeListContainer.findElementsByClassName("android.widget.TextView");
             // Geht alle Rezepte durch und vergleicht sie mit dem Suchbegriff
-            // Suchbegriffe werden immer Kleingeschrieben
+            // Der gesuchte Begriff wird in lower case umgewandelt, da Suchbegriffe immer klein geschrieben werden
             for (MobileElement textElement : recipes){
                 String recipeText = textElement.getText().toLowerCase();
                 if (recipeText.contains(titleFragment.toLowerCase())){

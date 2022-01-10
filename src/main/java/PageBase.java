@@ -1,6 +1,7 @@
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -58,5 +59,18 @@ public class PageBase {
         } catch (Exception exp){
             return false;
         }
+    }
+
+    public int[] getElementPosition(MobileElement element){
+        Point a = element.getLocation();
+        int [] coordinates = new int [2];
+        int leftX = element.getLocation().getX();
+        int rightX = leftX + element.getSize().getWidth();
+        coordinates[0] = (rightX + leftX) / 2;
+        int upperY = element.getLocation().getY();
+        int lowerY = upperY + element.getSize().getHeight();
+        coordinates[1] = (upperY + lowerY) / 2;
+
+        return coordinates;
     }
 }

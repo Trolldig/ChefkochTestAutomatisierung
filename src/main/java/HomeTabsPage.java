@@ -34,13 +34,16 @@ public class HomeTabsPage extends PageBase {
     MobileElement navSearchBtn;
 
     //Werbebanner, kann zum Swipen der Tabs benutzt werden
-    @FindBy(id = "de.pixelhouse:id/banner_top")
+    @FindBy(id = "de.pixelhouse:id/ad_banner_root")
     MobileElement banner;
 
     //Slider auf der Startseite
     @FindBy (id = "de.pixelhouse:id/main_slider_compose_view")
     MobileElement aktuellesSlider;
 
+    /**
+     * Klickt den Zustimmen-Button im Consent-Overlay
+     */
     public void clickConsentAcceptBtn(){
         click(consentBtn);
     }
@@ -58,20 +61,19 @@ public class HomeTabsPage extends PageBase {
     }
 
     /**
-     *
+     * Gibt die Koordinaten des Werbebanners auf der Startseite zurück
      * @return center coordinates of the element
      */
     public int[] getBannerPosition(){
-        Point a = banner.getLocation();
-        int [] coordinates = new int [2];
-        int leftX = banner.getLocation().getX();
-        int rightX = leftX + banner.getSize().getWidth();
-        coordinates[0] = (rightX + leftX) / 2;
-        int upperY = banner.getLocation().getY();
-        int lowerY = upperY + banner.getSize().getHeight();
-        coordinates[1] = (upperY + lowerY) / 2;
+        return getElementPosition(banner);
+    }
 
-        return coordinates;
+    /**
+     * Gibt die Koordinaten des Sliders "aktuelles" auf der Startseite zurück
+     * @return center coordinates of the element
+     */
+    public int[] getAktuellesSliderPosition(){
+        return getElementPosition(aktuellesSlider);
     }
 
 }

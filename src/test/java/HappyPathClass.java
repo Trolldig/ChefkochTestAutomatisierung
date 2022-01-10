@@ -14,6 +14,7 @@ import utilits.JsonReader;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 
 public class HappyPathClass extends BaseClass{
@@ -45,9 +46,12 @@ public class HappyPathClass extends BaseClass{
     }
 
     /**
-     * Performs swipe from the center of screen
+     * Performs swipe from the center of screen or element
      *
+     * @param xStart x-coordinate of element
+     * @param yStart y-coordinate of element
      * @param dir the direction of swipe
+     * @param useCoordinates If true, the method uses the start coordinates. If false, it uses the center of the screen
      **/
     public void swipeScreenWith(int xStart, int yStart, String dir, boolean useCoordinates) {
         System.out.println("swipeScreen(): dir: '" + dir + "'"); // always log your actions
@@ -79,7 +83,6 @@ public class HappyPathClass extends BaseClass{
             pointStart = new Point(xCoordinate / 2, yCoordinate / 2);
         }
         // init start point = given coordinates or center of screen if irrelevant
-        //pointStart = new Point(xCoordinate / 2, yCoordinate / 2);
 
         switch (dir) {
             case "DOWN": // center of footer
@@ -92,7 +95,7 @@ public class HappyPathClass extends BaseClass{
                 pointEnd = new Point(edgeBorder, yCoordinate);
                 break;
             case "RIGHT": // center of right side
-                pointEnd = new Point(xCoordinate - edgeBorder, yCoordinate);
+                pointEnd = new Point(dims.width - edgeBorder, yCoordinate);
                 break;
             default:
                 throw new IllegalArgumentException("swipeScreen(): dir: '" + dir.toString() + "' NOT supported");
@@ -161,7 +164,6 @@ public class HappyPathClass extends BaseClass{
         //driver.openNotifications();
         //driver.navigate().back();
         //Thread.sleep(10000);
-        //changeContext();
         homeTabsPage = new HomeTabsPage(driver);
         homeTabsPage.clickSearchBtn();
         System.out.println(driver.currentActivity());
@@ -200,10 +202,17 @@ public class HappyPathClass extends BaseClass{
     }
 
     @Test (priority = 3)
-    void swipeHomeSlider() throws InterruptedException{
+    void swipeHomeTabSlider() throws InterruptedException{
         int [] coordinates = homeTabsPage.getBannerPosition();
         swipeScreenWith(coordinates[0], coordinates[1],"LEFT",true);
-        Thread.sleep(10000);
+        coordinates = homeTabsPage.getBannerPosition();
+        swipeScreenWith(coordinates[0], coordinates[1],"RIGHT",true);
+    }
+
+    @Test (priority = 4)
+    void swipeHomeAktuellesSlider() throws InterruptedException{
+        int [] coordinates = homeTabsPage.getAktuellesSliderPosition();
+        swipeScreenWith(coordinates[0], coordinates[1],"LEFT",true);
         swipeScreenWith(coordinates[0], coordinates[1],"RIGHT",true);
         Thread.sleep(5000);
     }
