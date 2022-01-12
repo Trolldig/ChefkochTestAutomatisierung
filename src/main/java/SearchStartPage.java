@@ -110,7 +110,6 @@ public class SearchStartPage extends PageBase{
      */
     public void clickRandomSuggestion(){
         if (suggestionContainerFound()) {
-            Boolean textFound = false;
             // Packt alle TextViewsElemente der Vorschläge in eine Liste
             List<MobileElement> suggestionList = suggestionContainer.findElementsByClassName("android.widget.TextView");
             Random rand = new Random();

@@ -14,6 +14,7 @@ public class HomeTabsPage extends PageBase {
     }
 
     //Der "Zustimmen"-Button im Consent-Overlay beim Start der App
+    //xpath sollte man vermeiden, aber einen anderen Weg habe ich für den Webview-Button nicht gefunden
     @FindBy(xpath = "//div[@id=\"notice\"]/div[4]/div[1]/button")
     MobileElement consentBtn;
 

@@ -41,12 +41,14 @@ public class HappyPathClass extends BaseClass{
             }
         } else {
             driver.context((String) contextNames.toArray()[0]);
-            System.out.println("Contexts: "+contextNames.size());
         }
     }
 
     /**
      * Performs swipe from the center of screen or element
+     * Die Methode habe ich größenteils nicht selbst gecoded, sondern nur so angepasst, dass man einen eignen Startpunkt
+     * angeben kann. Wäre es vielleicht besser, dafür zwei getrennte Methoden zu nutzen? Eine Methode, welche die Swipe-
+     * Geste immer an den gleichen Koordinaten ausführt. Und eine, welche für bestimmte Elemente wie Slider benutzt wird?
      *
      * @param xStart x-coordinate of element
      * @param yStart y-coordinate of element
@@ -127,8 +129,13 @@ public class HappyPathClass extends BaseClass{
         }
     }
 
+    /**
+     * Scrollt in den Suchergebnissen nach unten und überprüft ob ein gesuchter Begriff in den neu dargestellten
+     * Rezepten gefunden wird.
+     * @param recipeName Gesuchter Teilbegriff eines Rezepttitels
+     * @return Ob der Teilbegriff in den dargestellten Rezepten gefunden wurde
+     */
     public boolean swipeAndCheckForRecipe(String recipeName){
-        searchPage.recipeTitlesContain(recipeName);
         swipeScreenWith(0,0,"UP",false);
         return searchPage.recipeTitlesContain(recipeName);
     }
@@ -149,7 +156,13 @@ public class HappyPathClass extends BaseClass{
 
     @Test (priority = 1)
     void acceptConsent() throws InterruptedException{
+        // Spricht etwas dagegen, das Setup über den ersten Test aufzurufen, anstatt die @BeforeTest Annotation zu
+        // verwenden?
         setup();
+        // Auf meinem langsamerem Laptop schlug der Test manchmal fehl, weil die App zu langsam geladen hat
+        // Die while-schleife wartet darauf, dass neben dem nativen view noch der webview mit dem consent-banner
+        // geladen wude. Ich bin mir nicht sicher, ob die Art zu "warten" so klug ist. Theoretisch kann das natürlich
+        // zu in einer unendlichen Schleife führen
         while(driver.getContextHandles().size() <= 1){
             Thread.sleep(1000);
         }
@@ -159,11 +172,9 @@ public class HappyPathClass extends BaseClass{
         changeContext();
     }
 
+    // Sucht mithilfer einer json-datei 2x nach einem Rezept.
     @Test(dataProvider = "search data", priority = 2)
     void theCakeIsALie(String searchTerm1, String searchterm2, String searchSuggestion2, String recipeTitle) throws InterruptedException {
-        //driver.openNotifications();
-        //driver.navigate().back();
-        //Thread.sleep(10000);
         homeTabsPage = new HomeTabsPage(driver);
         homeTabsPage.clickSearchBtn();
         System.out.println(driver.currentActivity());
@@ -191,16 +202,10 @@ public class HappyPathClass extends BaseClass{
         } else {
             searchPage.clickRandomRecipe();
         }
-
-        //searchPage.clickRecipe("Saftiger");
-        //searchPage.sendTextSearchBar("h");
-        //searchPage.clickRandomSuggestion();
-
-        //driver.pressKey(new KeyEvent(AndroidKey.ENTER));
-        //Thread.sleep(5000);
         setBackToHomeActivity();
     }
 
+    //Wechselt den Tab auf der HomeActivity mit einem Swipe
     @Test (priority = 3)
     void swipeHomeTabSlider() throws InterruptedException{
         int [] coordinates = homeTabsPage.getBannerPosition();
@@ -209,6 +214,7 @@ public class HappyPathClass extends BaseClass{
         swipeScreenWith(coordinates[0], coordinates[1],"RIGHT",true);
     }
 
+    //Swiped durch den Content-Slider in der HomeActivity
     @Test (priority = 4)
     void swipeHomeAktuellesSlider() throws InterruptedException{
         int [] coordinates = homeTabsPage.getAktuellesSliderPosition();

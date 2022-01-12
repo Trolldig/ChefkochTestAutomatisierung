@@ -44,7 +44,10 @@ public class BaseClass {
     }
 
     /**
-     * Navigiert mit Back-Button zurück, bis eine bestimmte Activity geöffnet ist
+     * Navigiert mit Back-Button zurück, bis eine bestimmte Activity geöffnet ist.
+     * Activities können auch direkt über den Driver gestartet werden. Ich war mir nicht sicher, ob man die Funktion
+     * nutzen oder lieber einen "natürlichen" Weg implementieren sollte, um zur Activity zu gelangen. So wird zumindest
+     * die Navigation mithilfe des Hardware-Back-Buttons getestet.
      * @param goalActivity
      * @throws InterruptedException
      */
@@ -57,11 +60,6 @@ public class BaseClass {
                 System.out.println(currentActivity);
             }
         }
-    }
-
-    //@Test
-    void sampleTest() throws InterruptedException {
-        System.out.println("sampleTest ist fertig. (Funktionslos)");
     }
 
     @AfterTest
